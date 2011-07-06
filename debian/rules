@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/mozilla-devscripts/xpi.mk
+
+MOZ_XPI_BUILD_COMMAND = make
+
+clean::
+	dh_testdir
+	dh_clean
+	make clean

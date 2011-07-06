@@ -1,0 +1,21 @@
+Source: firefox-gnome-keyring
+Section: web
+Priority: optional
+Maintainer: Ximin Luo <infinity0@gmx.com>
+Build-Depends: cdbs, debhelper (>= 7), mozilla-devscripts (>= 0.16~), xulrunner-dev (>= 5.0), libgnome-keyring-dev
+#: Standards-Version: 3.9.1
+Homepage: https://github.com/mdlavin/firefox-gnome-keyring
+Vcs-Git: git://github.com/infinity0/firefox-gnome-keyring.git
+Vcs-Browser: https://github.com/infinity0/firefox-gnome-keyring
+
+Package: xul-ext-gnome-keyring
+Architecture: i386 amd64
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}, ${xpi:Depends}
+Recommends: ${xpi:Recommends}
+Provides: ${xpi:Provides}
+Enhances: ${xpi:Enhances}
+Conflicts: iceweasel (<< 3.0), iceape (<< 2.0)
+Description: Store mozilla passwords in GNOME Keyring.
+ This extenion integrates gnome-keyring into xulrunner applications as the 
+ software security device.
