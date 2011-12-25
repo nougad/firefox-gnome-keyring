@@ -3,5 +3,7 @@
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/mozilla-devscripts/xpi.mk
 
+export VERSION=$(DEB_UPSTREAM_VERSION)
+
 MOZ_XPI_BUILD_COMMAND = make
 MOZ_XPI_CLEAN_COMMAND = make clean
