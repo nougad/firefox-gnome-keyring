@@ -1,5 +1,8 @@
 #!/usr/bin/make -f
 
+# clean build from git (including .orig.tar.gz if non-existent):
+# $ git-buildpackage --git-upstream-branch=master --git-debian-branch=debian --git-upstream-tree=branch
+
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/mozilla-devscripts/xpi.mk
 
