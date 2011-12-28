@@ -1,5 +1,5 @@
-firefox-gnome-keyring (0.5.1-1) experimental; urgency=low
+mozilla-gnome-keyring (0.6-0) UNRELEASED; urgency=low
 
   * Initial release.
 
- -- Ximin Luo <infinity0@gmx.com>  Wed, 06 Jul 2011 20:28:16 +0100
+ -- Ximin Luo <infinity0@gmx.com>  Wed, 28 Dec 2011 12:11:33 +0000
