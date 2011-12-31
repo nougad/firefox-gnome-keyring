@@ -14,7 +14,7 @@
 
 Name:		mozilla-gnome-keyring
 Version:	0.6
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:	Store mozilla passwords in GNOME Keyring
 
 Group:		Applications/Internet
@@ -34,7 +34,7 @@ This extenion integrates gnome-keyring into xulrunner applications as the softwa
 
 
 %build
-make %{?_smp_mflags}
+make %{?_smp_mflags} VERSION=%{version}
 
 
 %install
@@ -43,9 +43,10 @@ rm -rf %{buildroot}
 
 #install extension
 install -dm 755 %{buildroot}%{inst_dir}
+cd xpi/
 install -Dpm 644 chrome.manifest install.rdf %{buildroot}%{inst_dir}
-install -dm 755 %{buildroot}%{inst_dir}/platform/Linux_x86_64-gcc3/components/
-install -pm 644 libgnomekeyring.so %{buildroot}%{inst_dir}/platform/Linux_x86_64-gcc3/components/
+install -dm 755 %{buildroot}%{inst_dir}/platform/Linux_%{_arch}-gcc3/components/
+install -pm 644 platform/Linux_%{_arch}-gcc3/components/libgnomekeyring.so %{buildroot}%{inst_dir}/platform/Linux_%{_arch}-gcc3/components/
 
 
 %clean
@@ -59,5 +60,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 31 2011 Alexander Korsunsky <fat.lobyte9@gmail.com> - 0.6-3
+- Use version override for building
+
+* Sat Dec 31 2011 Alexander Korsunsky <fat.lobyte9@gmail.com> - 0.6-2
+- Install configured install.rdf instead of template
+- Use architecture independent directories
+
 * Sat Dec 31 2011 Alexander Korsunsky <fat.lobyte9@gmail.com> - 0.6-1
 - Initial Release
