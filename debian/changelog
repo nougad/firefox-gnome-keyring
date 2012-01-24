@@ -1,5 +1,20 @@
+mozilla-gnome-keyring (0.6-1ubuntu1) oneiric; urgency=low
+
+  * Change xulrunner-dev dependency to firefox-dev
+
+ -- Alexander Korsunsky <fat.lobyte9@gmail.com>  Tue, 24 Jan 2012 12:32:05
++0000
+
+mozilla-gnome-keyring (0.6-1) UNRELEASED; urgency=low
+
+  * Lower cdbs version to 0.28
+
+ -- Alexander Korsunsky <fat.lobyte9@gmail.com>  Tue, 24 Jan 2012 12:30:59
++0000
+
 mozilla-gnome-keyring (0.6-0) UNRELEASED; urgency=low
 
   * Initial release.
 
  -- Ximin Luo <infinity0@gmx.com>  Wed, 28 Dec 2011 12:11:33 +0000
+
