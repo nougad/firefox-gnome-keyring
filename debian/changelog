@@ -1,20 +1,27 @@
+mozilla-gnome-keyring (0.7~git20120105-0ubuntu1) oneiric; urgency=low
+
+  * New git snapshot
+  * Add ubuntu-xul-version-fix.patch:
+   - Correct version detection on ubuntu, use directory names instead of 
+     xulrunner executable
+  * Add thunderbird-dev to Build-Depends
+
+ -- Alexander Korsunsky <fat.lobyte9@gmail.com>  Mon, 30 Jan 2012 10:51:20 +0100
+
 mozilla-gnome-keyring (0.6-1ubuntu1) oneiric; urgency=low
 
   * Change xulrunner-dev dependency to firefox-dev
 
- -- Alexander Korsunsky <fat.lobyte9@gmail.com>  Tue, 24 Jan 2012 12:32:05
-+0000
+ -- Alexander Korsunsky <fat.lobyte9@gmail.com>  Tue, 24 Jan 2012 12:32:05 +0000
 
 mozilla-gnome-keyring (0.6-1) UNRELEASED; urgency=low
 
   * Lower cdbs version to 0.28
 
- -- Alexander Korsunsky <fat.lobyte9@gmail.com>  Tue, 24 Jan 2012 12:30:59
-+0000
+ -- Alexander Korsunsky <fat.lobyte9@gmail.com>  Tue, 24 Jan 2012 12:30:59 +0000
 
 mozilla-gnome-keyring (0.6-0) UNRELEASED; urgency=low
 
   * Initial release.
 
  -- Ximin Luo <infinity0@gmx.com>  Wed, 28 Dec 2011 12:11:33 +0000
-

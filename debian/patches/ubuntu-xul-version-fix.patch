@@ -1,0 +1,65 @@
+Index: firefox-gnome-keyring/Makefile
+===================================================================
+--- firefox-gnome-keyring.orig/Makefile	2012-01-30 12:04:10.324638997 +0100
++++ firefox-gnome-keyring/Makefile	2012-01-30 12:04:37.724595200 +0100
+@@ -1,8 +1,10 @@
+ PACKAGE          ?= firefox-gnome-keyring
+ VERSION          ?= $(shell git describe --tags 2>/dev/null || date +dev-%s)
+-# max/min compatibility versions to set, only if "xulrunner" tool is not available
+-XUL_VER_MIN      ?= 6.0.1
+-XUL_VER_MAX      ?= 6.*
++# max/min compatibility versions to set, only if version detection fails
++FIREFOX_VER_MIN      ?= 6.0.1
++FIREFOX_VER_MAX      ?= 6.*
++THUNDERBIRD_VER_MIN      ?= 6.0.1
++THUNDERBIRD_VER_MAX      ?= 6.*
+ # package distribution variables
+ FULLNAME         ?= $(PACKAGE)-$(VERSION)
+ ARCHIVENAME      ?= $(FULLNAME)
+@@ -48,12 +50,16 @@
+ 
+ xpi/install.rdf: install.rdf Makefile
+ 	mkdir -p xpi
+-	XUL_VER_MIN=`$(XULRUNNER) --gre-version`; \
+-	XUL_VER_MAX=`$(XULRUNNER) --gre-version | sed -rn -e 's/([^.]+).*/\1.*/gp'`; \
++	FIREFOX_VER_MIN=`ls -d /usr/lib/firefox-devel-*/ | sed -n 's/[^0-9.]*\([0-9.]*\).*/\1/p'`; \
++	FIREFOX_VER_MAX=`ls -d /usr/lib/firefox-devel-*/ | sed -n 's/[^0-9.]*\([0-9.]*\).*/\1/p' | sed -rn -e 's/([^.]+).*/\1.*/gp'`; \
++	THUNDERBIRD_VER_MIN=`ls -d /usr/lib/thunderbird-devel-*/ | sed -n 's/[^0-9.]*\([0-9.]*\).*/\1/p'`; \
++	THUNDERBIRD_VER_MAX=`ls -d /usr/lib/thunderbird-devel-*/ | sed -n 's/[^0-9.]*\([0-9.]*\).*/\1/p' | sed -rn -e 's/([^.]+).*/\1.*/gp'`; \
+ 	sed -e 's/$${PLATFORM}/'$(PLATFORM)'/g' \
+ 	    -e 's/$${VERSION}/'$(VERSION)'/g' \
+-	    -e 's/$${XUL_VER_MIN}/'"$${XUL_VER_MIN:-$(XUL_VER_MIN)}"'/g' \
+-	    -e 's/$${XUL_VER_MAX}/'"$${XUL_VER_MAX:-$(XUL_VER_MAX)}"'/g' \
++	    -e 's/$${FIREFOX_VER_MIN}/'"$${FIREFOX_VER_MIN:-$(FIREFOX_VER_MIN)}"'/g' \
++	    -e 's/$${FIREFOX_VER_MAX}/'"$${FIREFOX_VER_MAX:-$(FIREFOX_VER_MAX)}"'/g' \
++	    -e 's/$${THUNDERBIRD_VER_MIN}/'"$${THUNDERBIRD_VER_MIN:-$(THUNDERBIRD_VER_MIN)}"'/g' \
++	    -e 's/$${THUNDERBIRD_VER_MAX}/'"$${THUNDERBIRD_VER_MAX:-$(THUNDERBIRD_VER_MAX)}"'/g' \
+ 	    $< > $@
+ 
+ xpi/chrome.manifest: chrome.manifest Makefile
+Index: firefox-gnome-keyring/install.rdf
+===================================================================
+--- firefox-gnome-keyring.orig/install.rdf	2012-01-30 12:04:10.420638997 +0100
++++ firefox-gnome-keyring/install.rdf	2012-01-30 12:04:14.352638997 +0100
+@@ -12,8 +12,8 @@
+     <em:targetApplication>
+       <Description>
+         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
+-        <em:minVersion>${XUL_VER_MIN}</em:minVersion>
+-        <em:maxVersion>${XUL_VER_MAX}</em:maxVersion>
++        <em:minVersion>${THUNDERBIRD_VER_MIN}</em:minVersion>
++        <em:maxVersion>${THUNDERBIRD_VER_MAX}</em:maxVersion>
+       </Description>
+     </em:targetApplication>
+ 
+@@ -21,8 +21,8 @@
+     <em:targetApplication>
+       <Description>
+         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+-        <em:minVersion>${XUL_VER_MIN}</em:minVersion>
+-        <em:maxVersion>${XUL_VER_MAX}</em:maxVersion>
++        <em:minVersion>${FIREFOX_VER_MIN}</em:minVersion>
++        <em:maxVersion>${FIREFOX_VER_MAX}</em:maxVersion>
+       </Description>
+     </em:targetApplication>
+ 
