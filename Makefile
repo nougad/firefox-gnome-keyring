@@ -1,8 +1,10 @@
 PACKAGE          ?= firefox-gnome-keyring
 VERSION          ?= $(shell git describe --tags 2>/dev/null || date +dev-%s)
-# max/min compatibility versions to set, only if "xulrunner" tool is not available
-XUL_VER_MIN      ?= 6.0.1
-XUL_VER_MAX      ?= 6.*
+# max/min compatibility versions to set, only if version detection fails
+FIREFOX_VER_MIN      ?= 6.0.1
+FIREFOX_VER_MAX      ?= 6.*
+THUNDERBIRD_VER_MIN      ?= 6.0.1
+THUNDERBIRD_VER_MAX      ?= 6.*
 # package distribution variables
 FULLNAME         ?= $(PACKAGE)-$(VERSION)
 ARCHIVENAME      ?= $(FULLNAME)
@@ -10,11 +12,13 @@ ARCHIVENAME      ?= $(FULLNAME)
 
 # xulrunner tools. use = not ?= so we don't execute on every invocation
 XUL_PKG_NAME     = $(shell (pkg-config --atleast-version=2 libxul && echo libxul) || (pkg-config libxul2 && echo libxul2))
-XULRUNNER        = $(shell find -L $$(dirname $$(pkg-config --libs-only-L $(XUL_PKG_NAME) | tail -c+3)) -name xulrunner)
 
 # compilation flags
-XUL_CFLAGS       := `pkg-config --cflags $(XUL_PKG_NAME) gnome-keyring-1` -DMOZ_NO_MOZALLOC
-XUL_LDFLAGS      := `pkg-config --libs $(XUL_PKG_NAME) | sed 's/xpcomglue_s/xpcomglue_s_nomozalloc/' | sed 's/-lmozalloc//'`
+# TODO include path for thunderbird too
+# TODO copied from ubuntus pkgconfig - evaluate
+XUL_CFLAGS       := -I/usr/include/firefox/ -I/usr/include/nspr/ -I/usr/include/
+XUL_LDFLAGS      := -L/usr/lib/firefox/lib/ -lplds4 -lplc4 -lnspr4 -lpthread -ldl -lxpcomglue_s -lxul -lxpcom -lmozalloc
+GNOME_CFLAGS     := `pkg-config --cflags gnome-keyring-1` -DMOZ_NO_MOZALLOC
 GNOME_LDFLAGS    := `pkg-config --libs gnome-keyring-1`
 CPPFLAGS         += -fno-rtti -fno-exceptions -shared -fPIC -g -std=gnu++0x
 
@@ -48,12 +52,16 @@ xpi/platform/$(PLATFORM)/components/$(TARGET): $(TARGET)
 
 xpi/install.rdf: install.rdf Makefile
 	mkdir -p xpi
-	XUL_VER_MIN=`$(XULRUNNER) --gre-version`; \
-	XUL_VER_MAX=`$(XULRUNNER) --gre-version | sed -rn -e 's/([^.]+).*/\1.*/gp'`; \
+	FIREFOX_VER_MIN=`firefox -v | sed -n 's/[^0-9.]*\([0-9.]*\).*/\1/p'`; \
+	FIREFOX_VER_MAX=`firefox -v | sed -n 's/[^0-9.]*\([0-9.]*\).*/\1/p' | sed -rn -e 's/([^.]+).*/\1.*/gp'`; \
+	THUNDERBIRD_VER_MIN=`thunderbird -v | sed -n 's/[^0-9.]*\([0-9.]*\).*/\1/p'`; \
+	THUNDERBIRD_VER_MAX=`thunderbird -v | sed -n 's/[^0-9.]*\([0-9.]*\).*/\1/p' | sed -rn -e 's/([^.]+).*/\1.*/gp'`; \
 	sed -e 's/$${PLATFORM}/'$(PLATFORM)'/g' \
 	    -e 's/$${VERSION}/'$(VERSION)'/g' \
-	    -e 's/$${XUL_VER_MIN}/'"$${XUL_VER_MIN:-$(XUL_VER_MIN)}"'/g' \
-	    -e 's/$${XUL_VER_MAX}/'"$${XUL_VER_MAX:-$(XUL_VER_MAX)}"'/g' \
+	    -e 's/$${FIREFOX_VER_MIN}/'"$${FIREFOX_VER_MIN:-$(FIREFOX_VER_MIN)}"'/g' \
+	    -e 's/$${FIREFOX_VER_MAX}/'"$${FIREFOX_VER_MAX:-$(FIREFOX_VER_MAX)}"'/g' \
+	    -e 's/$${THUNDERBIRD_VER_MIN}/'"$${THUNDERBIRD_VER_MIN:-$(THUNDERBIRD_VER_MIN)}"'/g' \
+	    -e 's/$${THUNDERBIRD_VER_MAX}/'"$${THUNDERBIRD_VER_MAX:-$(THUNDERBIRD_VER_MAX)}"'/g' \
 	    $< > $@
 
 xpi/chrome.manifest: chrome.manifest Makefile
@@ -62,9 +70,8 @@ xpi/chrome.manifest: chrome.manifest Makefile
 	    $< > $@
 
 $(TARGET): GnomeKeyring.cpp GnomeKeyring.h Makefile
-	test -n "$(XUL_PKG_NAME)" || { echo "libxul missing" && false; }
 	$(CXX) $< -g -Wall -o $@ \
-	    $(XUL_CFLAGS) $(XUL_LDFLAGS) $(GNOME_LDFLAGS) $(CPPFLAGS) \
+	    $(XUL_CFLAGS) $(XUL_LDFLAGS) $(GNOME_LDFLAGS) $(GNOME_CFLAGS) $(CPPFLAGS) \
 	    $(CXXFLAGS) $(GECKO_DEFINES)
 	chmod +x $@
 
